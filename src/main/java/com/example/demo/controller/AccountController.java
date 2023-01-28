@@ -20,7 +20,7 @@ public class AccountController {
     @GetMapping(value = "/{accountNumber}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AccountOutputDto> getAccount(@PathVariable Long accountNumber) {
+    public ResponseEntity<AccountOutputDto> getAccountDetail(@PathVariable Long accountNumber) {
         return new ResponseEntity<>(accountService.getAccountDetailById(accountNumber), HttpStatus.OK);
     }
 
