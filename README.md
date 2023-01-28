@@ -14,4 +14,5 @@ The following was discovered as part of building this project:
 
 * Gestion de transactions, pour les cas d'echec de sauvegarde BDD (@Transactional)
 * Ajout d'une classe Client 
+* Ajouter la validation a l'entree des controllers (@Valid)
   

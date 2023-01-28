@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.input;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -11,12 +11,8 @@ import java.time.LocalDateTime;
 @Builder
 public class OperationInputDto {
     private Long id;
-
     private Long sourceAccountId;
-
     private Long targetAccountId;
-
     private Double amount;
-
     private LocalDateTime operationDate;
 }
