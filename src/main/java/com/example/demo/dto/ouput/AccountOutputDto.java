@@ -1,14 +1,14 @@
 package com.example.demo.dto.ouput;
 
-import lombok.Builder;
+import com.example.demo.dto.abstractDto.AbstractAccountDto;
+
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@Builder
-public class AccountOutputDto {
-    private String accountNumber;
-    private Double currentBalance;
-    private Long clientId;
+@SuperBuilder
+public class AccountOutputDto extends AbstractAccountDto {
+    // Add custom attributes if necessary
 }

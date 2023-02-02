@@ -1,48 +1,117 @@
 package com.example.demo.banking.service;
 
-import com.example.demo.service.OperationService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import com.example.demo.dto.input.OperationInputDto;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
+import java.util.Optional;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import com.example.demo.dto.input.OperationInputDto;
+import com.example.demo.dto.ouput.OperationOutputDto;
+import com.example.demo.exception.BankingException;
+import com.example.demo.model.Account;
+import com.example.demo.model.Operation;
+import com.example.demo.repository.AccountRepository;
+import com.example.demo.repository.OperationRepository;
+import com.example.demo.service.OperationService;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class OperationServiceTest {
 
-    @MockBean
-    private OperationService operationService;
+	@Autowired
+	private OperationService operationService;
 
-    @Test
-    public void operationValidDepotShouldSucceed(){
-        // Given
-        // OperationInput is valid
-        OperationInputDto operationInputDto = OperationInputDto
-                .builder()
-                .amount(10.0)
-                .build();
+	@MockBean
+	private OperationRepository operationRepository;
+	@MockBean
+	private AccountRepository accountRepository;
 
-        //When
-        boolean isComplete = operationService.makeOperation(operationInputDto);
 
-        //Then
-        assertThat(isComplete).isTrue();
-    }
+	@Test
+	public void operationValidDepotShouldSucceed() throws BankingException {
+		// Given
+		// OperationInput is valid
+		OperationInputDto operationInputDto = OperationInputDto
+				.builder()
+				.sourceAccountNumber("0000003")
+				.targetAccountNumber("0010002")
+				.amount(10.0)
+				.build();
 
-    @Test
-    public void operationInvalidDepotShouldFail(){
-        //Given
-        // OperationInput is invalid, amount is negative
-        OperationInputDto operationInputDto = OperationInputDto
-                .builder()
-                .amount(-10.0)
-                .build();
+		Optional<Account> optAccount = Optional.of(Account
+				.builder()
+				.accountId(1000L)
+				.clientId(1010L)
+				.accountNumber("00000001")
+				.currentBalance(1000.00)
+				.build());
 
-        //When
-        boolean isComplete = operationService.makeOperation(operationInputDto);
+		//When
+		when(accountRepository.findByAccountNumber("0010002")).thenReturn(optAccount);
+		when(operationRepository.save(Mockito.any(Operation.class))).thenReturn(null);
+		OperationOutputDto output = operationService.depositForAccount(operationInputDto);
 
-        //Then
-        assertThat(isComplete).isTrue();
-    }
+		//Then
+		assertTrue(output.getTargetAccountNumber() != null && output.getSourceAccountNumber() != null);
+	}
+
+	@Test
+	public void operationInvalidDepotShouldFail() {
+		//Given
+		// OperationInput is invalid, amount is negative
+		OperationInputDto operationInputDto = OperationInputDto
+				.builder()
+				.sourceAccountNumber("0000002")
+				.targetAccountNumber("0000001")
+				.amount(-10.0)
+				.build();
+
+		//When
+		assertThrows(BankingException.class, () -> {
+			operationService.depositForAccount(operationInputDto);
+		});
+	}
+
+	@Test
+	public void operationValidWithdrawShouldSucceed() throws BankingException {
+		// Given
+		// OperationInput is valid
+		OperationInputDto operationInputDto = OperationInputDto
+				.builder()
+				.targetAccountNumber("0000001")
+				.amount(10.0)
+				.build();
+
+		//When
+		OperationOutputDto output = operationService.withdrawFromAccount(operationInputDto);
+
+		//Then
+		assertNotNull(output.getTargetAccountNumber());
+	}
+
+	@Test
+	public void operationInvalidWithdrawShouldFail() {
+		//Given
+		// OperationInput is invalid, amount is negative
+		OperationInputDto operationInputDto = OperationInputDto
+				.builder()
+				.targetAccountNumber("0000001")
+				.amount(-10.0)
+				.build();
+
+		//When
+		assertThrows(BankingException.class, () -> {
+			operationService.withdrawFromAccount(operationInputDto);
+		});
+	}
 }

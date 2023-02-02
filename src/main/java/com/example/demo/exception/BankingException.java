@@ -1,6 +1,14 @@
 package com.example.demo.exception;
 
-public class BankingException extends Exception{
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+public class BankingException extends Exception {
 
+	private String humanMessage;
 }
+
