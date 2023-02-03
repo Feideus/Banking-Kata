@@ -7,4 +7,5 @@ public class BankingExceptionMessages {
 	public static final String TARGET_ACCOUNT_NULL = "No target account specified. Rejected";
 	public static final String SOURCE_ACCOUNT_NULL = "No source account specified. Rejected";
 	public static final String NOT_AUTHORIZED = "Request not authorised. Rejected";
+	public static final String ACCOUNT_NOT_FOUND = "Account not found. Rejected";
 }

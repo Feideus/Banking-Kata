@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface OperationRepository extends JpaRepository<Operation, Long> {
 
-    List<Operation> findBySourceAccountIdOrderByOperationDate(Long id);
+    List<Operation> findBysourceAccountNumberOrderByOperationDate(String sourceAccountNumber);
 }

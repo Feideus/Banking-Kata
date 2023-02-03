@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class BankingException extends Exception {
-
 	private String humanMessage;
 }
 

@@ -15,6 +15,8 @@ import com.example.demo.dto.abstractDto.AbstractOperationDto;
 public class OperationOutputDto extends AbstractOperationDto {
 
 	private LocalDateTime operationDate;
+	private Double amount;
+	private String description;
 
 	// Add custom attributes if necessary
 }

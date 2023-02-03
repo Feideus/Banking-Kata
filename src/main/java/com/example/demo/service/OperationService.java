@@ -37,6 +37,8 @@ public class OperationService {
 		// waiting for persitence to get added
 		Optional<Account> optAccount = accountRepository.findByAccountNumber(
 				operationInputDto.getTargetAccountNumber());
+		if (optAccount.isEmpty())
+			throw new BankingException(BankingExceptionMessages.ACCOUNT_NOT_FOUND);
 		optAccount.ifPresent(account -> {
 			account.setCurrentBalance(account.getCurrentBalance() + operationInputDto.getAmount());
 			accountRepository.save(account);
