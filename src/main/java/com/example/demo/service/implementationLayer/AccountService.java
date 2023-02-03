@@ -1,6 +1,5 @@
-package com.example.demo.service;
+package com.example.demo.service.implementationLayer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,22 +10,21 @@ import com.example.demo.dto.ouput.OperationOutputDto;
 import com.example.demo.exception.BankingException;
 import com.example.demo.exception.BankingExceptionMessages;
 import com.example.demo.model.Account;
-import com.example.demo.model.Operation;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.OperationRepository;
+import com.example.demo.service.interfaceLayer.IAccountService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Service
 // rollback on persistence if service fails or throws error
 @Transactional(rollbackFor = Exception.class)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class AccountService {
+public class AccountService implements IAccountService {
 
 	private AccountRepository accountRepository;
 
@@ -52,8 +50,7 @@ public class AccountService {
 		}
 	}
 
-	public List<OperationOutputDto> getOperationsForAccount(final AccountInputDto accountInputDto)
-			throws BankingException {
+	public List<OperationOutputDto> getOperationsForAccount(final AccountInputDto accountInputDto) throws BankingException {
 		verifyAccountInputValidity(accountInputDto);
 
 		return operationRepository.findBysourceAccountNumberOrderByOperationDate(accountInputDto.getAccountNumber())

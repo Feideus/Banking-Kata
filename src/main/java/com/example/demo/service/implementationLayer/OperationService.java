@@ -1,4 +1,4 @@
-package com.example.demo.service;
+package com.example.demo.service.implementationLayer;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -15,14 +15,15 @@ import com.example.demo.model.Account;
 import com.example.demo.model.Operation;
 import com.example.demo.repository.AccountRepository;
 import com.example.demo.repository.OperationRepository;
+import com.example.demo.service.interfaceLayer.IOperationService;
 
 import lombok.AllArgsConstructor;
 
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 // rollback on persistence if service fails or throws error
 @Transactional(rollbackFor = Exception.class)
-@AllArgsConstructor(onConstructor = @__(@Autowired))
-public class OperationService {
+public class OperationService implements IOperationService {
 
 	private AccountRepository accountRepository;
 	private OperationRepository operationRepository;
