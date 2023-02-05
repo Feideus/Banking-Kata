@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.example.demo.dto.input.AccountInputDto;
 import com.example.demo.dto.ouput.AccountOutputDto;
@@ -30,7 +31,8 @@ public class AccountController {
 		try {
 			return new ResponseEntity<>(accountService.getAccountDetailById(accountInputDto), HttpStatus.OK);
 		} catch (BankingException bankingException) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(bankingException.getErrorCode() != null ?
+					HttpStatus.resolve(bankingException.getErrorCode()) : HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -42,7 +44,8 @@ public class AccountController {
 		try {
 			return new ResponseEntity<>(accountService.getOperationsForAccount(accountInputDto), HttpStatus.OK);
 		} catch (BankingException bankingException) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(bankingException.getErrorCode() != null ?
+					HttpStatus.resolve(bankingException.getErrorCode()) : HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

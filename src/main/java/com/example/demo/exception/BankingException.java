@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class BankingException extends Exception {
 	private String humanMessage;
+	private Integer errorCode;
 }
 

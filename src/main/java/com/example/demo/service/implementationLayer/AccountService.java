@@ -36,12 +36,12 @@ public class AccountService implements IAccountService {
 		Optional<Account> optAccount = accountRepository.findByAccountNumber(accountInputDto.getAccountNumber());
 
 		if (optAccount.isEmpty())
-			throw new BankingException(BankingExceptionMessages.ACCOUNT_NOT_FOUND);
+			throw new BankingException(BankingExceptionMessages.ACCOUNT_NOT_FOUND,400);
 		else {
 			Account account = optAccount.get();
 			// if user asks for a someone else's account detail, reject
 			if (!account.getClientId().equals(accountInputDto.getClientId()))
-				throw new BankingException(BankingExceptionMessages.NOT_AUTHORIZED);
+				throw new BankingException(BankingExceptionMessages.NOT_AUTHORIZED,401);
 			return AccountOutputDto
 					.builder()
 					.currentBalance(account.getCurrentBalance())
@@ -68,8 +68,8 @@ public class AccountService implements IAccountService {
 
 	private void verifyAccountInputValidity(final AccountInputDto accountInputDto) throws BankingException {
 		if (accountInputDto.getAccountNumber() == null)
-			throw new BankingException(BankingExceptionMessages.TARGET_ACCOUNT_NULL);
+			throw new BankingException(BankingExceptionMessages.TARGET_ACCOUNT_NULL,400);
 		if (accountInputDto.getClientId() == null)
-			throw new BankingException(BankingExceptionMessages.NOT_AUTHORIZED);
+			throw new BankingException(BankingExceptionMessages.NOT_AUTHORIZED,401);
 	}
 }

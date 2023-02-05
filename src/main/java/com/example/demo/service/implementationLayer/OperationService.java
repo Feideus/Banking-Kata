@@ -39,7 +39,7 @@ public class OperationService implements IOperationService {
 		Optional<Account> optAccount = accountRepository.findByAccountNumber(
 				operationInputDto.getTargetAccountNumber());
 		if (optAccount.isEmpty())
-			throw new BankingException(BankingExceptionMessages.ACCOUNT_NOT_FOUND);
+			throw new BankingException(BankingExceptionMessages.ACCOUNT_NOT_FOUND,400);
 		optAccount.ifPresent(account -> {
 			account.setCurrentBalance(account.getCurrentBalance() + operationInputDto.getAmount());
 			accountRepository.save(account);
@@ -105,13 +105,13 @@ public class OperationService implements IOperationService {
 	private void checkWithdrawFunctionalValidity(final OperationInputDto operationInputDto) throws
 			BankingException {
 		if (operationInputDto.getAmount() == null)
-			throw new BankingException(BankingExceptionMessages.AMOUNT_IS_NULL);
+			throw new BankingException(BankingExceptionMessages.AMOUNT_IS_NULL,400);
 
 		if (operationInputDto.getAmount() <= 0)
-			throw new BankingException(BankingExceptionMessages.AMOUNT_IS_NEGATIVE);
+			throw new BankingException(BankingExceptionMessages.AMOUNT_IS_NEGATIVE,400);
 
 		if (operationInputDto.getTargetAccountNumber() == null)
-			throw new BankingException(BankingExceptionMessages.TARGET_ACCOUNT_NULL);
+			throw new BankingException(BankingExceptionMessages.TARGET_ACCOUNT_NULL, 400);
 	}
 
 	/**
@@ -121,15 +121,15 @@ public class OperationService implements IOperationService {
 	 */
 	private void checkDepositFunctionalValidity(final OperationInputDto operationInputDto) throws BankingException {
 		if (operationInputDto.getAmount() == null)
-			throw new BankingException(BankingExceptionMessages.AMOUNT_IS_NULL);
+			throw new BankingException(BankingExceptionMessages.AMOUNT_IS_NULL,400);
 
 		if (operationInputDto.getAmount() <= 0)
-			throw new BankingException(BankingExceptionMessages.AMOUNT_IS_NEGATIVE);
+			throw new BankingException(BankingExceptionMessages.AMOUNT_IS_NEGATIVE,400);
 
 		if (operationInputDto.getTargetAccountNumber() == null)
-			throw new BankingException(BankingExceptionMessages.TARGET_ACCOUNT_NULL);
+			throw new BankingException(BankingExceptionMessages.TARGET_ACCOUNT_NULL,400);
 
 		if (operationInputDto.getSourceAccountNumber() == null)
-			throw new BankingException(BankingExceptionMessages.SOURCE_ACCOUNT_NULL);
+			throw new BankingException(BankingExceptionMessages.SOURCE_ACCOUNT_NULL,400);
 	}
 }

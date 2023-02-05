@@ -21,7 +21,8 @@ public class OperationController {
 		try {
 			return new ResponseEntity<>(operationService.depositForAccount(operation), HttpStatus.OK);
 		} catch (BankingException bankingException) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(bankingException.getErrorCode() != null ?
+					HttpStatus.resolve(bankingException.getErrorCode()) : HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -30,7 +31,8 @@ public class OperationController {
 		try {
 			return new ResponseEntity<>(operationService.withdrawFromAccount(operation), HttpStatus.OK);
 		} catch (BankingException bankingException) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(bankingException.getErrorCode() != null ?
+					HttpStatus.resolve(bankingException.getErrorCode()) : HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
