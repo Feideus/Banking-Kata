@@ -48,7 +48,15 @@ public class OperationServiceTest {
 				.amount(10.0)
 				.build();
 
-		Optional<Account> optAccount = Optional.of(Account
+		Optional<Account> optAccountTarget = Optional.of(Account
+				.builder()
+				.accountId(1000L)
+				.clientId(1010L)
+				.accountNumber("00000001")
+				.currentBalance(1000.00)
+				.build());
+
+		Optional<Account> optAccountSource = Optional.of(Account
 				.builder()
 				.accountId(1000L)
 				.clientId(1010L)
@@ -57,7 +65,9 @@ public class OperationServiceTest {
 				.build());
 
 		//When
-		when(accountRepository.findByAccountNumber("0010002")).thenReturn(optAccount);
+		when(accountRepository.findByAccountNumber("0010002")).thenReturn(optAccountTarget);
+		when(accountRepository.findByAccountNumber("0000003")).thenReturn(optAccountSource);
+
 		when(operationRepository.save(Mockito.any(Operation.class))).thenReturn(null);
 		OperationOutputDto output = operationService.depositForAccount(operationInputDto);
 

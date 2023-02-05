@@ -38,11 +38,20 @@ public class OperationService implements IOperationService {
 		// waiting for persitence to get added
 		Optional<Account> optAccount = accountRepository.findByAccountNumber(
 				operationInputDto.getTargetAccountNumber());
-		if (optAccount.isEmpty())
+		Optional<Account> optAccountSource = accountRepository.findByAccountNumber(
+				operationInputDto.getSourceAccountNumber());
+
+		if (optAccount.isEmpty() || optAccountSource.isEmpty())
 			throw new BankingException(BankingExceptionMessages.ACCOUNT_NOT_FOUND,400);
 		optAccount.ifPresent(account -> {
+
+			Account sourceAccount = optAccountSource.get();
+
 			account.setCurrentBalance(account.getCurrentBalance() + operationInputDto.getAmount());
+			sourceAccount.setCurrentBalance(sourceAccount.getCurrentBalance() - operationInputDto.getAmount());
+
 			accountRepository.save(account);
+			accountRepository.save(sourceAccount);
 			// operation is finalized, save operation for history
 			Operation operationHistory = Operation
 					.builder()
@@ -61,6 +70,7 @@ public class OperationService implements IOperationService {
 		return OperationOutputDto
 				.builder()
 				.operationDate(LocalDateTime.now())
+				.amount(operationInputDto.getAmount())
 				.sourceAccountNumber(operationInputDto.getSourceAccountNumber())
 				.targetAccountNumber(operationInputDto.getTargetAccountNumber())
 				.build();
